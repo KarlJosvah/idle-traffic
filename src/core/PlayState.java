@@ -10,10 +10,7 @@ import engine.gamestate.GameState;
 import engine.gamestate.InputEvent;
 import engine.gamestate.GameStateHandler;
 
-import game.traffic.editor.TrafficEditor;
-import game.traffic.entity.HouseLayer;
-import game.traffic.entity.HouseWorld;
-import game.traffic.entity.InfiniteGrid;
+import game.traffic.Traffic;
 
 public class PlayState extends GameState {
 
@@ -25,8 +22,6 @@ public class PlayState extends GameState {
 		GameStateHandler.registerState(PlayState.ID, new PlayState());
 	}
 
-	private TrafficEditor editor;
-
 // ======================================================================================================================================================
 
 	public PlayState() {
@@ -36,12 +31,7 @@ public class PlayState extends GameState {
 
 	@Override
 	public void init() {
-		InfiniteGrid grid = new InfiniteGrid();
-		HouseWorld world = new HouseWorld();
-		this.editor = new TrafficEditor(grid.getCamera(), world);
-		this.addElement(grid);
-		this.addElement(new HouseLayer(world, grid.getCamera()));
-		this.addElement(this.editor);
+		this.addElement(new Traffic());
 	}
 
 	@Override
@@ -63,12 +53,6 @@ public class PlayState extends GameState {
 
 	@Override
 	public void input(InputEvent event) {
-		// The editor gets first refusal so renaming and drag/drop win over
-		// navigation. super.input() then dispatches to elements in registration
-		// order and stops at the first consumed event.
-		if (this.editor != null && !event.isHandled()) {
-			this.editor.input(event);
-		}
 		super.input(event);
 		if (event.isMouse()) {
 			if (event.getType() == InputEvent.Type.MOUSE_PRESSED && event.getButton() == InputEvent.LEFT) {
