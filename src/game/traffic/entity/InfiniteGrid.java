@@ -15,7 +15,10 @@ public final class InfiniteGrid implements StateElement {
 
 // ======================================================================================================================================================
 
+	public static final double ZOOM_STEP = 1.15;
+
 	private static final double MOVE_SPEED = 480.0;
+	private static final double FAST_MOVE_MULTIPLIER = 5.0;
 	private static final double ROTATE_SPEED = Math.PI * 0.75;
 	private static final double ROTATE_DRAG_SPEED = 0.006;
 
@@ -65,7 +68,8 @@ public final class InfiniteGrid implements StateElement {
 		}
 		if (moveX != 0.0 || moveY != 0.0) {
 			double length = Math.hypot(moveX, moveY);
-			this.camera.moveScreen(moveX / length * MOVE_SPEED * elapsedSecond, moveY / length * MOVE_SPEED * elapsedSecond);
+			double speed = MOVE_SPEED * (this.shiftDown ? FAST_MOVE_MULTIPLIER : 1.0);
+			this.camera.moveScreen(moveX / length * speed * elapsedSecond, moveY / length * speed * elapsedSecond);
 		}
 
 		if (this.keysDown.contains(KeyEvent.VK_Q)) {
@@ -74,6 +78,7 @@ public final class InfiniteGrid implements StateElement {
 		if (this.keysDown.contains(KeyEvent.VK_E)) {
 			this.camera.rotate(ROTATE_SPEED * elapsedSecond);
 		}
+		this.camera.tick(elapsedSecond);
 	}
 
 // ======================================================================================================================================================
@@ -95,7 +100,11 @@ public final class InfiniteGrid implements StateElement {
 			if (event.getType() == InputEvent.Type.KEY_PRESSED) {
 				this.keysDown.add(keyCode);
 				if (keyCode == KeyEvent.VK_R) {
-					this.camera.reset();
+					this.camera.reset(true);
+				} else if (keyCode == KeyEvent.VK_MINUS || keyCode == KeyEvent.VK_SUBTRACT) {
+					this.camera.zoomBy(1.0 / InfiniteGrid.ZOOM_STEP);
+				} else if (keyCode == KeyEvent.VK_PLUS || keyCode == KeyEvent.VK_EQUALS || keyCode == KeyEvent.VK_ADD) {
+					this.camera.zoomBy(InfiniteGrid.ZOOM_STEP);
 				}
 				event.consume();
 			} else if (event.getType() == InputEvent.Type.KEY_RELEASED) {
@@ -112,7 +121,7 @@ public final class InfiniteGrid implements StateElement {
 				this.dragY = event.getY();
 				event.consume();
 			} else if (event.getButton() == InputEvent.MIDDLE) {
-				this.camera.reset();
+				this.camera.reset(true);
 				event.consume();
 			}
 		} else if (event.getType() == InputEvent.Type.MOUSE_DRAGGED) {
@@ -124,7 +133,8 @@ public final class InfiniteGrid implements StateElement {
 				if (this.shiftDown) {
 					this.camera.rotate(deltaX * ROTATE_DRAG_SPEED);
 				} else {
-					this.camera.moveScreen(-deltaX, -deltaY);
+					double zoom = this.camera.getZoom();
+					this.camera.moveScreen(-deltaX / zoom, -deltaY / zoom);
 				}
 				event.consume();
 			}

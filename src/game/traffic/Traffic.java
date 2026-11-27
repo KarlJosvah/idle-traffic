@@ -10,6 +10,7 @@ import game.traffic.editor.TrafficEditor;
 import game.traffic.entity.HouseLayer;
 import game.traffic.entity.HouseWorld;
 import game.traffic.entity.InfiniteGrid;
+import game.traffic.helper.MouseWheelInput;
 
 public class Traffic implements StateElement {
 
@@ -22,6 +23,10 @@ public class Traffic implements StateElement {
 	private HouseWorld world;
 	private HouseLayer houseLayer;
 	private TrafficEditor editor;
+	private MouseWheelInput wheelInput;
+
+	private int viewportWidth = Traffic.WIDTH;
+	private int viewportHeight = Traffic.HEIGHT;
 
 // ======================================================================================================================================================
 
@@ -37,6 +42,8 @@ public class Traffic implements StateElement {
 			this.world = new HouseWorld();
 			this.houseLayer = new HouseLayer(this.world, this.grid.getCamera());
 			this.editor = new TrafficEditor(this.grid.getCamera(), this.world);
+			this.wheelInput = new MouseWheelInput();
+			this.wheelInput.attach();
 		}
 		this.grid.init(parentState);
 		this.houseLayer.init(parentState);
@@ -51,12 +58,23 @@ public class Traffic implements StateElement {
 		this.grid.close();
 		this.houseLayer.close();
 		this.editor.close();
+		this.wheelInput.close();
 	}
 
 // ======================================================================================================================================================
 
 	@Override
 	public void tick(double elapsedSecond, long loopID) {
+		int notches = this.wheelInput.pollNotches();
+		if (notches != 0) {
+			double centerX = this.viewportWidth / 2.0;
+			double centerY = this.viewportHeight / 2.0;
+			int mouseX = this.wheelInput.getX() >= 0 ? this.wheelInput.getX() : (int) centerX;
+			int mouseY = this.wheelInput.getY() >= 0 ? this.wheelInput.getY() : (int) centerY;
+			this.grid.getCamera().zoomAt(
+				Math.pow(InfiniteGrid.ZOOM_STEP, notches), mouseX, mouseY, centerX, centerY
+			);
+		}
 		this.grid.tick(elapsedSecond, loopID);
 		this.houseLayer.tick(elapsedSecond, loopID);
 		this.editor.tick(elapsedSecond, loopID);
@@ -64,6 +82,12 @@ public class Traffic implements StateElement {
 
 	@Override
 	public void render(Graphics2D g, int renderWidth, int renderHeight) {
+		if (renderWidth > 0) {
+			this.viewportWidth = renderWidth;
+		}
+		if (renderHeight > 0) {
+			this.viewportHeight = renderHeight;
+		}
 		this.grid.render(g, renderWidth, renderHeight);
 		this.houseLayer.render(g, renderWidth, renderHeight);
 		this.editor.render(g, renderWidth, renderHeight);
@@ -101,5 +125,9 @@ public class Traffic implements StateElement {
 
 	public TrafficEditor getEditor() {
 		return this.editor;
+	}
+
+	public MouseWheelInput getWheelInput() {
+		return this.wheelInput;
 	}
 }
