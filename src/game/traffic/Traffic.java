@@ -7,9 +7,9 @@ import engine.gamestate.GameState;
 import engine.gamestate.InputEvent;
 import engine.gamestate.StateElement;
 import game.traffic.editor.TrafficEditor;
-import game.traffic.entity.HouseLayer;
-import game.traffic.entity.HouseWorld;
 import game.traffic.entity.InfiniteGrid;
+import game.traffic.entity.house.HouseLayer;
+import game.traffic.entity.house.HouseWorld;
 import game.traffic.helper.MouseWheelInput;
 
 public class Traffic implements StateElement {

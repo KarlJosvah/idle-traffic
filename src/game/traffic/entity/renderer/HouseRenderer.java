@@ -8,7 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.geom.Point2D;
 
-import game.traffic.entity.House;
+import game.traffic.entity.house.House;
 import game.traffic.helper.Camera2D;
 
 public final class HouseRenderer {

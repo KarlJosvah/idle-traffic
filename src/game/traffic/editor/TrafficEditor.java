@@ -7,8 +7,8 @@ import java.awt.event.KeyEvent;
 import engine.gamestate.GameState;
 import engine.gamestate.InputEvent;
 import engine.gamestate.StateElement;
-import game.traffic.entity.House;
-import game.traffic.entity.HouseWorld;
+import game.traffic.entity.house.House;
+import game.traffic.entity.house.HouseWorld;
 import game.traffic.helper.Camera2D;
 
 public final class TrafficEditor implements StateElement {

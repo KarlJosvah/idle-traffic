@@ -3,7 +3,7 @@ package game.traffic.factory;
 import java.util.EnumMap;
 import java.util.Map;
 
-import game.traffic.entity.House;
+import game.traffic.entity.house.House;
 
 public final class HouseFactory {
 

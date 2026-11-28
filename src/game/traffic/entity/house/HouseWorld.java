@@ -1,4 +1,4 @@
-package game.traffic.entity;
+package game.traffic.entity.house;
 
 import java.util.ArrayList;
 import java.util.List;

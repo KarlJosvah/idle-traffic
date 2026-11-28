@@ -1,4 +1,4 @@
-package game.traffic.entity;
+package game.traffic.entity.house;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;

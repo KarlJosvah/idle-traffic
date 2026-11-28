@@ -8,8 +8,8 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Stroke;
 
-import game.traffic.entity.House;
-import game.traffic.entity.HouseWorld;
+import game.traffic.entity.house.House;
+import game.traffic.entity.house.HouseWorld;
 
 public final class EditorUI {
 
